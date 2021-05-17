@@ -5,6 +5,17 @@ const getNotes = () => {
     return "Your notes...";
 }
 
+const readNote = (title) => {
+    const notes = loadNotes();
+    const result = notes.find(note => note.title === title);
+    if (result) {
+        console.log(chalk.blue(result.title));
+        console.log(chalk.yellow(result.body));
+    } else {
+        console.log(chalk.red('No note with that title found.'));
+    }
+}
+
 const listNotes = () => {
     const notes = loadNotes();
     if (notes.length > 0) {
@@ -14,14 +25,16 @@ const listNotes = () => {
             console.log(chalk.yellow(note.body));
         })
     } else {
-        console.log(chalk.green.bold('You have no notes yet.'));
+        console.log(chalk.red('You have no notes yet.'));
     }
 };
 
 const addNote = (title, body) => {
     const notes = loadNotes();
-    const duplicateNotes = notes.filter(note => note.title === title);
-    if (duplicateNotes.length === 0) {
+    // Stop as soon as one found. Otherwise, return 'undefined'.
+    const duplicateNote = notes.find(note => note.title === title);
+
+    if (!duplicateNote) {
         notes.push({title: title, body: body});
         saveNotes(notes);
         console.log(chalk.bgGreen('New note added!'));
@@ -32,7 +45,7 @@ const addNote = (title, body) => {
 
 const saveNotes = (notes) => {
     fs.writeFileSync('notes.json', JSON.stringify(notes));
-}
+};
 
 const loadNotes = () => {
     try {
@@ -56,6 +69,7 @@ const removeNote = (title) => {
 }
 
 module.exports = {
+    readNote,
     listNotes,
     addNote,
     removeNote
