@@ -57,6 +57,18 @@ const loadNotes = () => {
     }
 };
 
+const updateNote = (title, body) => {
+    const notes = loadNotes();
+    const filteredNotes = notes.filter(note => note.title !== title);
+    if (filteredNotes.length < notes.length) {
+        filteredNotes.push({title, body});
+        saveNotes(filteredNotes);
+        console.log(chalk.green('Note updated successfully!'));
+    } else {
+        console.log(chalk.red('No note with that title found.'));
+    }
+}
+
 const removeNote = (title) => {
     const notes = loadNotes();
     const filteredNotes = notes.filter(note => note.title !== title);
@@ -72,5 +84,6 @@ module.exports = {
     readNote,
     listNotes,
     addNote,
+    updateNote,
     removeNote
 };
